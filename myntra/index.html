@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Trend Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Fashion Trend Analysis</h1>
+    <button onclick="fetchTrends()">Fetch Trends</button>
+    <canvas id="salesChart" width="400" height="200"></canvas>
+    <script>
+        async function fetchTrends() {
+            const response = await fetch('http://127.0.0.1:5000/fetch-trends');
+            const data = await response.json();
+            displayChart(data);
+        }
+
+        function displayChart(data) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const labels = data.map(item => item.dress_type);
+            const quantities = data.map(item => item.quantity);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantity Sold',
+                        data: quantities,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
